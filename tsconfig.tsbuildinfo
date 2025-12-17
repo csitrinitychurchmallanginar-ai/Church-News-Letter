@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/components/filters.tsx","./src/components/pdfdownload.tsx","./src/components/scheduletable.tsx","./src/types/schedule.ts","./src/utils/datehelpers.ts","./src/utils/dateutils.ts"],"errors":true,"version":"5.9.3"}

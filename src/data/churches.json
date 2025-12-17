@@ -1,0 +1,24 @@
+{
+  "churches": [
+    {
+      "id": "st-pauls-kulloor",
+      "name": "C.S.I.தூய பவுல் ஆலய ஆராதனை ஒழுங்குகள்",
+      "location": "குல்லூர் சந்தை"
+    },
+    {
+      "id": "jesusnathar-melathulukankulam",
+      "name": "C.S.I. இயேசுநாதர் ஆலய ஆராதனை ஒழுங்குகள்",
+      "location": "மேலத்துலுக்கன்குளம்"
+    },
+    {
+      "id": "trinity-mallankinar",
+      "name": "C.S.I திரித்துவ ஆலய ஆராதனை ஒழுங்குகள்",
+      "location": "மல்லாங்கிணர்"
+    },
+    {
+      "id": "st-pauls-vvv",
+      "name": "C.S.I தூய பவுல் ஆலய ஆராதனை ஒழுங்குகள்",
+      "location": "V.V.V.நகர்"
+    }
+  ]
+}
