@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ScheduleData, Church } from '../types/schedule';
+import { getApiUrl } from '../config';
 
 interface PDFDownloadProps {
   scheduleData: ScheduleData;
@@ -12,7 +13,8 @@ const PDFDownload: React.FC<PDFDownloadProps> = ({ scheduleData, church }) => {
   const handleDownload = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/generate-pdf', {
+      const apiUrl = getApiUrl();
+      const response = await fetch(`${apiUrl}/api/generate-pdf`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -36,7 +38,7 @@ const PDFDownload: React.FC<PDFDownloadProps> = ({ scheduleData, church }) => {
       }
 
       const blob = await response.blob();
-      
+
       if (blob.size === 0) {
         throw new Error('Empty PDF file received');
       }
@@ -44,7 +46,7 @@ const PDFDownload: React.FC<PDFDownloadProps> = ({ scheduleData, church }) => {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      
+
       // Generate filename with place name and Tamil month name
       const monthNames = [
         'ஜனவரி', 'பிப்ரவரி', 'மார்ச்', 'ஏப்ரல்', 'மே', 'ஜூன்',
@@ -53,7 +55,7 @@ const PDFDownload: React.FC<PDFDownloadProps> = ({ scheduleData, church }) => {
       const monthName = monthNames[scheduleData.month - 1] || `Month${scheduleData.month}`;
       const placeName = church.location || 'Place';
       const filename = `${placeName}_${monthName}_${scheduleData.year}.pdf`;
-      
+
       a.download = filename;
       document.body.appendChild(a);
       a.click();
