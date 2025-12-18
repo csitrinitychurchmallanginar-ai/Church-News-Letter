@@ -1,4 +1,4 @@
-FROM ghcr.io/puppeteer/puppeteer:21.5.0
+FROM ghcr.io/puppeteer/puppeteer:latest
 
 # Switch to root to install dependencies if needed, though puppeteer image has them.
 # We need to copy files.
