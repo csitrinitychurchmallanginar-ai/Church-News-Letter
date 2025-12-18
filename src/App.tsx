@@ -31,14 +31,14 @@ const App: React.FC = () => {
       const isVVVNagar = filters.place === 'st-pauls-vvv';
       const isKulloor = filters.place === 'st-pauls-kulloor';
       const isMelathulukankulam = filters.place === 'jesusnathar-melathulukankulam';
-      
+
       // Filter dates based on church
       // For Mallankinar and V.V.V. Nagar: Always include 1st date + Friday and Sunday
       const isFirstDate = (date: Date) => date.getDate() === 1;
       const filteredDates = dates.filter((date) => {
         const dayOfWeek = getDay(date);
         const isFirst = isFirstDate(date);
-        
+
         if (isMallankinar || isVVVNagar) {
           // Always include 1st date, plus Friday and Sunday
           return isFirst || dayOfWeek === 0 || dayOfWeek === 5; // 1st, Sunday, Friday
@@ -53,10 +53,10 @@ const App: React.FC = () => {
 
       // Generate entries with pre-filled data for specific churches
       const entries: ScheduleEntry[] = [];
-      
+
       // Check if it's January
       const isJanuary = filters.month === 1;
-      
+
       filteredDates.forEach((date) => {
         const dayOfWeek = getDay(date);
         const dateStr = formatDate(date);
@@ -74,7 +74,7 @@ const App: React.FC = () => {
               speaker: '',
             });
           }
-          
+
           // Add 6 PM evening service in January only
           if (isJanuary && isFirst) {
             entries.push({
@@ -85,7 +85,7 @@ const App: React.FC = () => {
               speaker: '',
             });
           }
-          
+
           if (dayOfWeek === 5) {
             // Friday: Evening 7:00 PM - Women's Meeting
             entries.push({
@@ -123,7 +123,7 @@ const App: React.FC = () => {
               speaker: '',
             });
           }
-          
+
           // Add 6 PM evening service in January only
           if (isJanuary && isFirst) {
             entries.push({
@@ -134,9 +134,9 @@ const App: React.FC = () => {
               speaker: '',
             });
           }
-          
+
           if (dayOfWeek === 5) {
-            // Friday: Evening 7:00 PM - Evening Worship
+            // Friday: Evening 7:00 PM - Evening Service
             entries.push({
               date: dateStr,
               day: dayName,
@@ -145,19 +145,19 @@ const App: React.FC = () => {
               speaker: '',
             });
           } else if (dayOfWeek === 0) {
-            // Sunday: Morning service and Youth meeting
+            // Sunday: Morning service and Women's meeting
             entries.push({
               date: dateStr,
               day: dayName,
-              time: 'காலை 8.30 மணி',
+              time: 'காலை 10 மணி',
               serviceType: 'ஞாயிறு ஆராதனை',
               speaker: '',
             });
             entries.push({
               date: dateStr,
               day: dayName,
-              time: 'மதியம் 12 மணி',
-              serviceType: 'வாலிபர் கூடுகை',
+              time: 'காலை 10 மணி',
+              serviceType: 'பெண்கள் கூடுகை',
               speaker: '',
             });
           }
@@ -218,14 +218,14 @@ const App: React.FC = () => {
     const dateKeys = Array.from(groupedByDate.keys());
     // const targetDate = dateKeys[dateIndex];
     // const entriesForDate = groupedByDate.get(targetDate) || [];
-    
+
     // Find the index in the full array
     let currentIndex = 0;
     for (let i = 0; i < dateIndex; i++) {
       currentIndex += groupedByDate.get(dateKeys[i])?.length || 0;
     }
     currentIndex += serviceIndex;
-    
+
     if (updated[currentIndex]) {
       updated[currentIndex] = { ...updated[currentIndex], [field]: value };
       setScheduleEntries(updated);
@@ -237,7 +237,7 @@ const App: React.FC = () => {
     const dateKeys = Array.from(groupedByDate.keys());
     const targetDate = dateKeys[dateIndex];
     const entriesForDate = groupedByDate.get(targetDate) || [];
-    
+
     // Update all entries with the same date
     entriesForDate.forEach((entry) => {
       const index = updated.findIndex((e) => e.date === targetDate && e.time === entry.time);
@@ -245,7 +245,7 @@ const App: React.FC = () => {
         updated[index] = { ...updated[index], date, day };
       }
     });
-    
+
     setScheduleEntries(updated);
   };
 
