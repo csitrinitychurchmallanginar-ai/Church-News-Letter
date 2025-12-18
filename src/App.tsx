@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import Filters from './components/Filters';
 import ScheduleTable from './components/ScheduleTable';
 import PDFDownload from './components/PDFDownload';
-import { FilterState, ScheduleEntry, ScheduleData, Church } from './types/schedule';
+import { FilterState, ScheduleEntry, ScheduleData } from './types/schedule';
 import { generateMonthDates, formatDate, getTamilDayName } from './utils/dateHelpers';
 import { getDay } from 'date-fns';
 import churchesData from './data/churches.json';
@@ -33,11 +33,15 @@ const App: React.FC = () => {
       const isMelathulukankulam = filters.place === 'jesusnathar-melathulukankulam';
       
       // Filter dates based on church
+      // For Mallankinar and V.V.V. Nagar: Always include 1st date + Friday and Sunday
+      const isFirstDate = (date: Date) => date.getDate() === 1;
       const filteredDates = dates.filter((date) => {
         const dayOfWeek = getDay(date);
+        const isFirst = isFirstDate(date);
+        
         if (isMallankinar || isVVVNagar) {
-          // Only Friday and Sunday for these churches
-          return dayOfWeek === 0 || dayOfWeek === 5; // Sunday, Friday
+          // Always include 1st date, plus Friday and Sunday
+          return isFirst || dayOfWeek === 0 || dayOfWeek === 5; // 1st, Sunday, Friday
         } else if (isKulloor || isMelathulukankulam) {
           // Only Sunday for these churches
           return dayOfWeek === 0; // Sunday only
@@ -50,12 +54,38 @@ const App: React.FC = () => {
       // Generate entries with pre-filled data for specific churches
       const entries: ScheduleEntry[] = [];
       
+      // Check if it's January
+      const isJanuary = filters.month === 1;
+      
       filteredDates.forEach((date) => {
         const dayOfWeek = getDay(date);
         const dateStr = formatDate(date);
         const dayName = getTamilDayName(date);
+        const isFirst = isFirstDate(date);
 
         if (isMallankinar) {
+          // Add 6 AM morning service on 1st date of every month (skip if Sunday)
+          if (isFirst && dayOfWeek !== 0) {
+            entries.push({
+              date: dateStr,
+              day: dayName,
+              time: 'காலை 6 மணி',
+              serviceType: 'காலை ஆராதனை',
+              speaker: '',
+            });
+          }
+          
+          // Add 6 PM evening service in January only
+          if (isJanuary && isFirst) {
+            entries.push({
+              date: dateStr,
+              day: dayName,
+              time: 'மாலை 6 மணி',
+              serviceType: 'மாலை ஆராதனை',
+              speaker: '',
+            });
+          }
+          
           if (dayOfWeek === 5) {
             // Friday: Evening 7:00 PM - Women's Meeting
             entries.push({
@@ -83,6 +113,28 @@ const App: React.FC = () => {
             });
           }
         } else if (isVVVNagar) {
+          // Add 5 AM morning service on 1st date of every month (skip if Sunday)
+          if (isFirst && dayOfWeek !== 0) {
+            entries.push({
+              date: dateStr,
+              day: dayName,
+              time: 'காலை 5 மணி',
+              serviceType: 'காலை ஆராதனை',
+              speaker: '',
+            });
+          }
+          
+          // Add 6 PM evening service in January only
+          if (isJanuary && isFirst) {
+            entries.push({
+              date: dateStr,
+              day: dayName,
+              time: 'மாலை 6 மணி',
+              serviceType: 'மாலை ஆராதனை',
+              speaker: '',
+            });
+          }
+          
           if (dayOfWeek === 5) {
             // Friday: Evening 7:00 PM - Evening Worship
             entries.push({
@@ -164,8 +216,8 @@ const App: React.FC = () => {
   const handleEntryChange = (dateIndex: number, serviceIndex: number, field: 'time' | 'serviceType' | 'speaker', value: string) => {
     const updated = [...scheduleEntries];
     const dateKeys = Array.from(groupedByDate.keys());
-    const targetDate = dateKeys[dateIndex];
-    const entriesForDate = groupedByDate.get(targetDate) || [];
+    // const targetDate = dateKeys[dateIndex];
+    // const entriesForDate = groupedByDate.get(targetDate) || [];
     
     // Find the index in the full array
     let currentIndex = 0;
