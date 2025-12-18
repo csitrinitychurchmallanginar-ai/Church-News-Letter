@@ -1,0 +1,25 @@
+FROM ghcr.io/puppeteer/puppeteer:21.5.0
+
+# Switch to root to install dependencies if needed, though puppeteer image has them.
+# We need to copy files.
+USER root
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies (skipping chromium download since the base image has it)
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
+
+RUN npm install
+
+# Copy source code
+COPY . .
+
+# Expose the port Render expects (though they set PORT env var, we just expose 3000/3001 for documentation)
+EXPOSE 3001
+
+# Start the server
+CMD ["npm", "run", "start:prod"]
