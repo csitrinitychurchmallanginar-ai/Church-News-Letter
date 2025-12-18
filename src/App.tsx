@@ -149,7 +149,7 @@ const App: React.FC = () => {
             entries.push({
               date: dateStr,
               day: dayName,
-              time: 'காலை 10 மணி',
+              time: 'காலை 8.30 மணி',
               serviceType: 'ஞாயிறு ஆராதனை',
               speaker: '',
             });
