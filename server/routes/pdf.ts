@@ -23,7 +23,7 @@ router.post('/generate-pdf', async (req, res) => {
     // Launch Puppeteer with timeout
     // Use the new Headless mode to avoid deprecation warnings
     browser = await puppeteer.launch({
-      headless: 'new',
+      headless: true,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
@@ -37,9 +37,9 @@ router.post('/generate-pdf', async (req, res) => {
     });
 
     const page = await browser.newPage();
-    
+
     // Set content with timeout
-    await page.setContent(htmlContent, { 
+    await page.setContent(htmlContent, {
       waitUntil: 'domcontentloaded',
       timeout: 30000,
     });
@@ -71,14 +71,14 @@ router.post('/generate-pdf', async (req, res) => {
     const monthName = monthNames[scheduleData.month - 1] || `Month${scheduleData.month}`;
     const placeName = church.location || 'Place';
     const filename = `${placeName}_${monthName}_${scheduleData.year}.pdf`.replace(/[^a-zA-Z0-9._\u0B80-\u0BFF-]/g, '_');
-    
+
     // Send PDF as response
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(filename)}"`);
-    res.send(pdf);
+    res.send(Buffer.from(pdf));
   } catch (error: any) {
     console.error('Error generating PDF:', error);
-    
+
     // Close browser if it's still open
     if (browser) {
       try {
@@ -89,7 +89,7 @@ router.post('/generate-pdf', async (req, res) => {
     }
 
     const errorMessage = error?.message || 'Failed to generate PDF';
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to generate PDF',
       details: errorMessage,
     });

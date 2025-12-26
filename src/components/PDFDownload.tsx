@@ -43,6 +43,15 @@ const PDFDownload: React.FC<PDFDownloadProps> = ({ scheduleData, church }) => {
         throw new Error('Empty PDF file received');
       }
 
+      // Check if the blob is actually a PDF
+      const header = await blob.slice(0, 5).text();
+      if (header !== '%PDF-') {
+        // It's not a PDF. Try to read it as text to see the error.
+        const textContent = await blob.text();
+        console.error('Received invalid PDF content:', textContent);
+        throw new Error(`Server returned invalid PDF data: ${textContent.slice(0, 100)}...`);
+      }
+
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;

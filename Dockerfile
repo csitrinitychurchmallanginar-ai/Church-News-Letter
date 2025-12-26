@@ -18,6 +18,9 @@ RUN npm install
 # Copy source code
 COPY . .
 
+# Build the frontend
+RUN npm run build
+
 # Expose the port Render expects (though they set PORT env var, we just expose 3000/3001 for documentation)
 EXPOSE 3001
 
