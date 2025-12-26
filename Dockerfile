@@ -11,7 +11,7 @@ COPY package*.json ./
 
 # Install dependencies (skipping chromium download since the base image has it)
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
+# ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 
 RUN npm install
 
